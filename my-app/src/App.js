@@ -1,14 +1,10 @@
 import './App.css';
-import Header from './components/Header';
+import Counter from './components/Counter';
 
 function App() {
-  return (
-    <div className='App'>
-      <Header title={"Learn React A"} />
-      <Header title={"Learn React B"} />
-      <Header title={"Learn React C"} />
-    </div>
-  );
+  return <div className='App'>
+    <Counter />
+  </div>;
 }
 
 export default App;

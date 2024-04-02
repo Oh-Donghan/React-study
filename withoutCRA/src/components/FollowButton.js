@@ -1,6 +1,4 @@
 import React from 'react';
-// React Component!
-// Follow <-> following
 function FollowButton() {
   const [following, setFollowing] = React.useState(false);
 
@@ -19,7 +17,7 @@ function FollowButton() {
 
   const followBtnStyle = {
     ...commonBtnStyle,
-    backgroundColor: 'black',
+    backgroundColor: 'blue',
     color: 'white',
   };
 

@@ -1,3 +1,4 @@
+import React from 'react';
 // React Component!
 // Follow <-> following
 function FollowButton() {
@@ -38,3 +39,5 @@ function FollowButton() {
     </div>
   );
 }
+
+export default FollowButton;

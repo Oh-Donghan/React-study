@@ -8,7 +8,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
-          안녕 !!! 안녕!!!
+          안녕 !!! 안녕!!! 하이요!!
         </p>
         <a
           className="App-link"

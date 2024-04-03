@@ -1,7 +1,7 @@
 import React from 'react';
 
 export default function BusinessCard(props) {
-  console.log(props);
+  // console.log(props);
   const { company, team, name, phoneNumber, email } = props.info;
   return (
     <div>

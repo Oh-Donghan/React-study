@@ -11,9 +11,9 @@ export default function App() {
     // 조건 추가
     if (pickedCards.length > 2) {
       const names = pickedCards.reduce((acc, cur) => {
-        return acc = acc.concat(`${cur.name}, `)
-      }, "")
-      return alert(`당첨자는 ${names} 입니다.`)
+        return (acc = acc.concat(`${cur.name}, `));
+      }, '');
+      return alert(`당첨자는 ${names} 입니다.`);
     }
     // 추첨하기 버튼을 누르면, 랜덤하게 하나의 명함을 고른다
     const randomIdx = Math.floor(Math.random() * cards.length);
@@ -29,11 +29,17 @@ export default function App() {
     setCards(datas);
   }, []);
 
+  const result = pickedCards.map((pickedCards) => (
+    <BusinessCard info={pickedCards} key={pickedCards.phoneNumber} />
+  ));
+
+  console.log(result);
 
   return (
     <div>
       {cards.length > 0 && <button onClick={draw}>추첨하기</button>}
-      {pickedCards.length > 0 && <BusinessCard info={pickedCards[pickedCards.length - 1]} />}
+      {/* {pickedCards.length > 0 && <BusinessCard info={pickedCards[pickedCards.length - 1]} />} */}
+      {pickedCards.length > 0 && result}
     </div>
   );
 }

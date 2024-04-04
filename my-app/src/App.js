@@ -7,6 +7,9 @@ import FuntionClock from './FunctionClock';
 import Banner from './components/Banner';
 import Toggle from './components/Toggle';
 import SimpleForm from './components/SimpleForm';
+import UnControlledForm from './components/UnControlledForm';
+import CatParent from './components/CatParent';
+import ToDoList from './components/ToDoList';
 
 function App() {
   return (
@@ -18,7 +21,10 @@ function App() {
       {/* <FuntionClock /> */}
       {/* <Banner /> */}
       {/* <Toggle /> */}
-      <SimpleForm />
+      {/* <SimpleForm /> */}
+      {/* <UnControlledForm /> */}
+      {/* <CatParent /> */}
+      <ToDoList />
     </div>
   );
 }

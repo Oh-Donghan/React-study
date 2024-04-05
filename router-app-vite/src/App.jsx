@@ -5,15 +5,15 @@ import TechPage from './components/TechPage';
 import JavascriptPage from './components/JavascriptPage';
 import ReactPage from './components/ReactPage';
 import ReactDocPage from './components/ReactDocPage';
+import UserStore from './store/user';
 
 function App() {
   // root url : main page component
   // tech url : tech page component
   // blog url : blog page component
-
   
   return (
-    <>
+    <UserStore>
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<MainPage />} />
@@ -25,7 +25,7 @@ function App() {
           <Route path='blog' element={<BlogPage />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </UserStore>
   );
 }
 

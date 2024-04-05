@@ -1,4 +1,9 @@
 import { createContext, useReducer } from 'react';
+import PropTypes from 'prop-types';
+
+UserStore.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 export const UserContext = createContext();
 
@@ -23,7 +28,7 @@ export default function UserStore(props) {
   console.log(user);
 
   return (
-    <UserContext.Provider value={dispatch}>
+    <UserContext.Provider value={{user, dispatch}}>
       {props.children}
     </UserContext.Provider>
   );

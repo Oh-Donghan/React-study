@@ -5,7 +5,6 @@ export default function ReactDocPage() {
   const navigate = useNavigate();
 
   const params = useParams();
-  console.log(params);
 
   return (
     <>

@@ -10,6 +10,6 @@ export const db = factory({
 
 db.user.create({
   id: 1,
-  nickName: "hwarari",
-  email: "hwarari@gmail.com",
+  nickName: "dong_oh",
+  email: "dong_oh@gmail.com",
 });

@@ -11,9 +11,7 @@ import { todoReducer } from './Todo/todoReducer';
 
 /* useReducer 사용 */
 function App() {
-  const [inputState, inputDispatch] = useReducer(todoInputReducer, {
-    text: '',
-  });
+  const [inputState, inputDispatch] = useReducer(todoInputReducer, { text: '' });
   const [todoState, todoDispatch] = useReducer(todoReducer, { todos: [] });
 
   const handleTextChange = (text: string) => {

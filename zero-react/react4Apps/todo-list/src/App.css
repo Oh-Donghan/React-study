@@ -1,5 +1,9 @@
 body {
   background-color: rgb(207, 232, 255);
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+  user-select: none;         /* Non-prefixed version, currently supported by Chrome, Opera, and Edge */
 }
 
 #root {
@@ -8,5 +12,10 @@ body {
 }
 
 .App {
-  text-align: center;
+  margin: 32px;
+  padding: 32px;
+  min-width: 500px;
+  border-radius: 16px;
+  background-color: white;
+  box-shadow: rgb(0 0 0 / 10%) 0 0 10px;
 }

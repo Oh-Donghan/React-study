@@ -1,13 +1,45 @@
 import styled from '@emotion/styled';
 import PokeMarkChip from '../Common/PokeMarkChip';
-
-const TempImgUrl =  'https://mblogthumb-phinf.pstatic.net/20160722_90/cool911016_1469169937457pEG2Q_JPEG/150519_%C7%C7%C4%AB%C3%F2%C6%E4%C0%CC%C6%DB%C5%E4%C0%CC_%B5%B5%BE%C8_004.jpg?type=w800';
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { PokeImageSkeleton } from '../Common/PokeImageSkeleton';
+import { useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from '../Store';
+import { fetchPokemonDetail } from '../Store/pokemonDetailSlice';
 
 const PokemonDetail = () => {
+  const { name } = useParams();
+  const imageType = useSelector((state: RootState) => state.imageType.type);
+  const { pokemonDetails } = useSelector((state: RootState) => state.pokemonDetail);
+  const pokemon = name ? pokemonDetails[name] : null;
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (!name) {
+      return;
+    }
+
+    dispatch(fetchPokemonDetail(name))
+  }, [dispatch, name]);
+
+  if (!name || !pokemon) {
+    return (
+      <Container>
+        <ImageContainer>
+          <PokeImageSkeleton />
+        </ImageContainer>
+        <Divider />
+        <Footer>
+          <PokeMarkChip />
+        </Footer>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <ImageContainer>
-        <Image src={TempImgUrl} alt='포켓몬 이미지' />
+        <Image src={pokemon.images[imageType]} alt={pokemon.koreanName} />
       </ImageContainer>
       <Divider />
       <Body>
@@ -16,25 +48,37 @@ const PokemonDetail = () => {
           <tbody>
             <TableRow>
               <TableHeader>번호</TableHeader>
-              <td>1</td>
+              <td>{pokemon.id}</td>
             </TableRow>
             <TableRow>
               <TableHeader>이름</TableHeader>
-              <td>이상해씨</td>
+              <td>{`${pokemon.koreanName} (${pokemon.name})`}</td>
+            </TableRow>
+            <TableRow>
+              <TableHeader>타입</TableHeader>
+              <td>{pokemon.types.toString()}</td>
+            </TableRow>
+            <TableRow>
+              <TableHeader>키</TableHeader>
+              <td>{pokemon.height} m</td>
+            </TableRow>
+            <TableRow>
+              <TableHeader>몸무게</TableHeader>
+              <td>{pokemon.weight} kg</td>
             </TableRow>
           </tbody>
         </Table>
         <h2>능력치</h2>
         <Table>
           <tbody>
-            <TableRow>
-              <TableHeader>hp</TableHeader>
-              <td>45</td>
-            </TableRow>
-            <TableRow>
-              <TableHeader>attack</TableHeader>
-              <td>49</td>
-            </TableRow>
+            {pokemon.baseStats.map((stat) => {
+              return (
+                <TableRow key={stat.name}>
+                  <TableHeader>{stat.name}</TableHeader>
+                  <td>{stat.value}</td>
+                </TableRow>
+              );
+            })}
           </tbody>
         </Table>
       </Body>
@@ -42,15 +86,15 @@ const PokemonDetail = () => {
         <PokeMarkChip />
       </Footer>
     </Container>
-  )
-}
+  );
+};
 
 const Container = styled.section`
   border: 1px solid #c0c0c0;
   margin: 16px 32px;
   border-radius: 16px;
   box-shadow: 1px 1px 3px 1px #c0c0c0;
-`
+`;
 
 const ImageContainer = styled.section`
   display: flex;
@@ -58,22 +102,23 @@ const ImageContainer = styled.section`
   justify-content: center;
   align-items: center;
   margin: 8px 0;
-`
+  min-height: 350px;
+`;
 
 const Image = styled.img`
   width: 350px;
   height: 350px;
-`
+`;
 
 const Divider = styled.hr`
   margin: 32px;
   border-style: none;
   border-top: 1px dashed #d3d3d3;
-`
+`;
 
 const Body = styled.section`
   margin: 0 32px;
-`
+`;
 
 const Table = styled.table`
   width: 100%;
@@ -81,14 +126,15 @@ const Table = styled.table`
   border-spacing: 0;
   margin: 0 auto 16px;
 
-  th, td {
+  th,
+  td {
     padding: 6px 12px;
   }
-`
+`;
 
 const TableRow = styled.tr`
   border: 1px solid #f0f0f0;
-`
+`;
 
 const TableHeader = styled.th`
   width: 1px;
@@ -97,12 +143,12 @@ const TableHeader = styled.th`
   font-weight: normal;
   font-size: 14px;
   color: #a0a0a0;
-`
+`;
 
 const Footer = styled.section`
   display: flex;
   flex-direction: row;
   margin: 32px 16px;
-`
+`;
 
 export default PokemonDetail;

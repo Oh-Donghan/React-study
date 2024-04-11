@@ -2,23 +2,68 @@ import styled from '@emotion/styled';
 import PokeNameChip from '../Common/PokeNameChip';
 import PokeMarkChip from '../Common/PokeMarkChip';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { PokeImageSkeleton } from '../Common/PokeImageSkeleton';
+import { useIntersectionObserver } from 'react-intersection-observer-hook';
+import { useSelector } from 'react-redux';
+import { RootState, useAppDispatch } from '../Store';
+import { fetchPokemonDetail } from '../Store/pokemonDetailSlice';
 
-const TempImgUrl =  'https://mblogthumb-phinf.pstatic.net/20160722_90/cool911016_1469169937457pEG2Q_JPEG/150519_%C7%C7%C4%AB%C3%F2%C6%E4%C0%CC%C6%DB%C5%E4%C0%CC_%B5%B5%BE%C8_004.jpg?type=w800';
+interface PokeCardProps {
+  name: string;
+}
 
-const PokeCard = () => {
+const PokeCard = (props: PokeCardProps) => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const imageType = useSelector((state: RootState) => state.imageType.type);
+  const { pokemonDetails } = useSelector((state: RootState) => state.pokemonDetail);
+  const pokemon = pokemonDetails[props.name];
+  
+  // 불필요한 API호출 최적화 - intersection observer hook
+  // ❯ npm install react-intersection-observer-hook
+  const [ref, { entry }] = useIntersectionObserver();
+  const isVisible = entry && entry.isIntersecting;
 
   const handleClick = () => {
-    navigate('/pokemon/피카츄');
+    navigate(`/pokemon/${props.name}`);
+  };
+
+  useEffect(() => {
+    if (!isVisible) {
+      return;
+    }
+    
+    dispatch(fetchPokemonDetail(props.name))
+  }, [dispatch, props.name, isVisible]);
+
+  if (!pokemon) {
+    return (
+      <Item color={'#ffd924'} ref={ref}>
+        <Header>
+          <PokeNameChip name={'포켓몬'} color={'#ffd924'} id={0} />
+        </Header>
+        <Body>
+          <PokeImageSkeleton />
+        </Body>
+        <Footer>
+          <PokeMarkChip />
+        </Footer>
+      </Item>
+    );
   }
-  
+
   return (
-    <Item onClick={handleClick}>
+    <Item onClick={handleClick} color={pokemon.color} ref={ref}>
       <Header>
-        <PokeNameChip />
+        <PokeNameChip
+          name={pokemon.koreanName}
+          color={pokemon.color}
+          id={pokemon.id}
+        />
       </Header>
       <Body>
-        <Image src={TempImgUrl} alt='포켓몬이미지' />
+        <Image src={pokemon.images[imageType]} alt={pokemon.name} />
       </Body>
       <Footer>
         <PokeMarkChip />
@@ -27,7 +72,7 @@ const PokeCard = () => {
   );
 };
 
-const Item = styled.li`
+const Item = styled.li<{ color: string }>`
   display: flex;
   flex-direction: column;
 
@@ -48,9 +93,9 @@ const Item = styled.li`
   }
 
   &:active {
-    background-color: yellow;
+    background-color: ${(props) => props.color};
     opacity: 0.8;
-    transition: background-color 0s;
+    transition: background-color 0.1s;
   }
 `;
 
@@ -66,17 +111,17 @@ const Body = styled.section`
   justify-content: center;
   align-items: center;
   margin: 8px 0;
-`
+`;
 
 const Image = styled.img`
   width: 180px;
   height: 180px;
-`
+`;
 
 const Footer = styled.section`
   display: flex;
   flex-direction: row;
   margin: 8px 0;
-`
+`;
 
 export default PokeCard;

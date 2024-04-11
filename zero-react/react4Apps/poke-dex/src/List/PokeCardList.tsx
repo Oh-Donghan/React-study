@@ -1,19 +1,50 @@
 import styled from '@emotion/styled';
 import PokeCard from './PokeCard';
+import { useEffect } from 'react';
+import useInfiniteScroll from 'react-infinite-scroll-hook';
+import { RootState, useAppDispatch } from '../Store';
+import { fetchPokemons } from '../Store/pokemonsSlice';
+import { useSelector } from 'react-redux';
 
 const PokeCardList = () => {
+  const dispatch = useAppDispatch();
+  const { pokemons } = useSelector((state: RootState) => state.pokemons)
+
+  // 무한스크롤 ❯ npm install react-infinite-scroll-hook
+  const [infiniteRef] = useInfiniteScroll({
+    loading: false,
+    hasNextPage: pokemons.next !== '',
+    onLoadMore: async () => {
+      dispatch(fetchPokemons(pokemons.next));
+    },
+    disabled: false,
+    rootMargin: '0px 0px 400px 0px',
+  });
+
+  useEffect(() => {
+    dispatch(fetchPokemons());
+  }, [dispatch]);
+
   return (
-    <List>
-      {
-        Array.from({ length: 10 }).map((_, index) => {
+    <>
+      <List>
+        {pokemons.results.map((pokemon, index) => {
           return (
-            <PokeCard key={index} />
-          )
-        })
-      }
-    </List>
-  )
-}
+            <PokeCard key={`${pokemon.name}_${index}`} name={pokemon.name} />
+          );
+        })}
+      </List>
+      <Loading ref={infiniteRef}>
+        Loading...
+      </Loading>
+    </>
+  );
+};
+
+const Loading = styled.div`
+  display: flex;
+  justify-content: center;
+`
 
 const List = styled.ul`
   list-style: none;
@@ -25,6 +56,6 @@ const List = styled.ul`
   flex-wrap: wrap;
   justify-content: center;
   gap: 20px;
-`
+`;
 
 export default PokeCardList;

@@ -11,6 +11,9 @@
   "author": "dong_oh",
   "license": "ISC",
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "dotenv": "^16.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
@@ -25,6 +28,7 @@
     "babel-loader": "^9.1.3",
     "css-loader": "^7.1.1",
     "html-webpack-plugin": "^5.6.0",
+    "kakao.maps.d.ts": "^0.1.39",
     "mini-css-extract-plugin": "^2.8.1",
     "style-loader": "^4.0.0",
     "typescript": "^5.4.5",

@@ -3,6 +3,10 @@ const path = require('path'); // == import path from 'path'
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const dotenv = require('dotenv');
+const webpack = require('webpack');
+
+dotenv.config();
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -10,7 +14,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 module.exports = {
   entry: './src/index.tsx',
   resolve: {
-    extensions: ['.js', '.jsx', '.tsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   output: {
     path: path.resolve(__dirname, '../build'),
@@ -60,6 +64,9 @@ module.exports = {
     isProduction ? new MiniCssExtractPlugin({
       linkType: false,
       filename: '[name].[contenthash:8].css'
-    }) : undefined
+    }) : undefined,
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(process.env)
+    })
   ].filter(Boolean)
 };

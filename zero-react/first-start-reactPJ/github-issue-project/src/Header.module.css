@@ -11,12 +11,12 @@
 }
 
 .circle {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   background-color: rgba(27, 31, 36, 0.08);
   align-items: center;
   display: flex;
   justify-content: center;
-  margin-left: 3px;
+  margin-left: 4px;
 }

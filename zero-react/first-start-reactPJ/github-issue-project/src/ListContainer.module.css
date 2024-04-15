@@ -29,21 +29,7 @@
   box-shadow: none;
 }
 
-.filterLists {
+.paginationContainer {
   display: flex;
-  align-items: center;
-}
-
-.filterLists > span {
-  padding: 0 16px;
-  line-height: 21px;
-}
-
-.textFilter {
-  margin-right: 8px;
-  cursor: pointer;
-}
-
-.selected {
-  font-weight: 800;
+  justify-content: center;
 }

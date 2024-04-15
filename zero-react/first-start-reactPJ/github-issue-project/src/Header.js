@@ -9,7 +9,7 @@ export default function Header() {
       <div className={styles.buttonContainer}>
         <Button
           style={{
-            fontSize: "14px",
+            fontSize: "13px",
             backgroundColor: "transparent",
             color: "black",
           }}
@@ -19,7 +19,7 @@ export default function Header() {
         <Space />
         <Button
           style={{
-            fontSize: "14px",
+            fontSize: "13px",
             backgroundColor: "transparent",
             color: "black",
           }}
@@ -29,7 +29,7 @@ export default function Header() {
         <Space />
         <Button
           style={{
-            fontSize: "14px",
+            fontSize: "13px",
             backgroundColor: "transparent",
             color: "black",
           }}

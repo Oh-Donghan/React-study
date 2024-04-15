@@ -10,17 +10,28 @@ export default function Modal({
   searchDataList,
   onClickCell,
 }) {
-  const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState(searchDataList);
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    setFilteredData(searchDataList.filter((item) => item === searchValue));
+    setFilteredData(searchDataList);
+  }, [searchDataList]);
+
+  useEffect(() => {
+    if (searchValue === "") {
+      setFilteredData(searchDataList);
+    } else {
+      const filteredSearchList = searchDataList.filter((item) =>
+        item.name.toLowerCase().includes(searchValue.toLowerCase()),
+      );
+      setFilteredData(filteredSearchList);
+    }
   }, [searchDataList, searchValue]);
 
   return (
     <div className={cx(styles.modal, { [styles.opened]: opened })}>
       <div className={styles.header}>
-        <span>{title}</span>
+        <span>Filter by {title}</span>
         <button onClick={onClose}>X</button>
       </div>
       <div className={styles.input}>
@@ -30,11 +41,22 @@ export default function Modal({
           onChange={(e) => setSearchValue(e.target.value)}
         />
       </div>
-      {filteredData.map((data) => (
-        <div key={data} onClick={onClickCell} role="button">
-          {data}
-        </div>
-      ))}
+      <div className={styles.list}>
+        {filteredData.map((data) => (
+          <div
+            onClick={() => {
+              const isLabel = title.toLowerCase() === "label";
+              const paramKey = isLabel ? "labels" : title.toLowerCase();
+
+              onClickCell({ [paramKey]: data.name });
+            }}
+            key={data.name}
+            className={styles.item}
+          >
+            {data.name}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

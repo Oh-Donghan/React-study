@@ -7,7 +7,20 @@
 .buttonContainer {
   display: flex;
   margin-bottom: 20px;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.names {
+  color: #0960da;
+}
+
+.names > span:last-child {
+  font-weight: bold;
+}
+
+.buttons {
+  display: flex;
 }
 
 .circle {

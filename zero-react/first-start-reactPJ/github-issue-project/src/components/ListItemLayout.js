@@ -8,7 +8,7 @@ export default function ListItemLayout({ children, className }) {
         type="checkbox"
         className={styles.checkbox}
         // value={checked}
-        // onChange={onChangeCheckBox}
+        // onChange={onClickCheckBox}
       />
       {children}
     </div>

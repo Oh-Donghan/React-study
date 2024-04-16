@@ -1,48 +1,33 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import cx from "clsx";
 import styles from "./CreateIssue.module.css";
 import Button from "../components/Button";
 import TextField from "../components/TextField";
+import { useForm } from "../Hooks";
+import axios from "axios";
+import { GITHUB_API } from "../api";
 
 export default function CreateIssue() {
   const inputRef = useRef();
   const textareaRef = useRef();
-  const [inputValues, setInputValues] = useState({ title: "", body: "" });
-  const [errors, setErrors] = useState({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    setIsSubmitting(true);
-    const validateResult = validate(inputValues);
-    setErrors(validateResult);
-
-    const refs = { title: inputRef, body: textareaRef };
-    const errorKeys = Object.keys(validateResult);
-
-    if (errorKeys.length !== 0) {
-      const key = errorKeys[0];
-      alert(validateResult[key]);
-      refs[key].current.focus();
-      // ref control
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (errorKeys.length === 0) {
-      console.log("Submit 성공");
-    }
-  }
-
-  useEffect(() => {
-    inputRef.current.focus();
-  }, []);
-
-  function onChange(e) {
-    const { name, value } = e.target;
-    setInputValues({ ...inputValues, [name]: value });
-  }
+  const { isSubmitting, inputValues, onChange, errors, handleSubmit } = useForm(
+    {
+      initialValues: { title: "", body: "" },
+      onSubmit: async () =>
+        await axios.post(
+          `${GITHUB_API}/repos/Oh-Donghan/React-study/issues`,
+          inputValues,
+          {
+            headers: {
+              Authorization: process.env.REACT_APP_GITHUB_TOKEN,
+              "Content-Type": "application/json",
+            },
+          },
+        ),
+      validate,
+      refs: { title: inputRef, body: textareaRef },
+    },
+  );
 
   return (
     <div className={styles.container}>

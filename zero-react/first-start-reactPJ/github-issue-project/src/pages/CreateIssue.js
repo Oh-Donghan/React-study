@@ -3,13 +3,19 @@ import cx from "clsx";
 import styles from "./CreateIssue.module.css";
 import Button from "../components/Button";
 import TextField from "../components/TextField";
-import { useForm } from "../Hooks";
+import { useForm, useUser } from "../Hooks";
 import axios from "axios";
 import { GITHUB_API } from "../api";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateIssue() {
   const inputRef = useRef();
   const textareaRef = useRef();
+  const navigate = useNavigate();
+  const user = useUser();
+
+  console.log({ user });
+
   const { isSubmitting, inputValues, onChange, errors, handleSubmit } = useForm(
     {
       initialValues: { title: "", body: "" },
@@ -25,7 +31,12 @@ export default function CreateIssue() {
           },
         ),
       validate,
+      onErrors: () => console.log("error"),
       refs: { title: inputRef, body: textareaRef },
+      onSuccess: (result) => {
+        console.log({ result });
+        navigate("/", { replace: true });
+      },
     },
   );
 

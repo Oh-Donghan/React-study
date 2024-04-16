@@ -8,10 +8,14 @@ import Actions from "./pages/Actions";
 import Projects from "./pages/Projects";
 import Nav from "./components/Nav";
 import Header from "./Header";
+import { QueryClient, QueryClientProvider } from "react-query";
+import Footer from "./Footer";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <Nav />
       <Header />
       <Routes>
@@ -24,7 +28,8 @@ function App() {
         <Route path="/security" element={<Security />} />
         <Route path="/actions" element={<Actions />} />
       </Routes>
-    </>
+      <Footer />
+    </QueryClientProvider>
   );
 }
 
@@ -41,3 +46,10 @@ export default App;
  * unmount - 리액트 컴포넌트가 사라질때, 지워질때
  * update - 특정 값이 변해서 리액트 컴포넌트가 다시 그려질때
 */
+/*
+ * Context API - 전역적인 정보를 prop drilling 없이 사용할때
+ * -> 굳이 사용하지 않아도 된다면,
+ * hooks로 빼내어 사용한다.
+ * -> hooks로 선언한 부분이 반복적으로 네트워크 콜을 유발한다면,
+ * cache를 통해서 개선해볼 수 있을 것.
+ */

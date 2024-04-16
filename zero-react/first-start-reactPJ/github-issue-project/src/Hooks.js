@@ -1,5 +1,9 @@
+import axios from "axios";
 import { useState } from "react";
+import { GITHUB_API } from "./api";
+import { useQuery } from "react-query";
 
+// useForm
 export function useForm({
   initialValues,
   validate,
@@ -37,7 +41,13 @@ export function useForm({
     }
 
     if (errorKeys.length === 0) {
-      await onSubmit();
+      try {
+        const result = await onSubmit();
+        onSuccess(result);
+      } catch (e) {
+        console.log({ e });
+        onErrors();
+      }
       return;
     }
   }
@@ -49,4 +59,20 @@ export function useForm({
     errors,
     handleSubmit,
   };
+}
+
+async function getUserInfo() {
+  const data = await axios.get(`${GITHUB_API}/user`, {
+    headers: {
+      Authorization: process.env.REACT_APP_GITHUB_TOKEN,
+      "Content-Type": "application.json",
+    },
+  });
+
+  return data.data;
+}
+
+// useUser
+export function useUser() {
+  return useQuery(["userInfo"], () => getUserInfo(), { staleTime: "Infinity" });
 }

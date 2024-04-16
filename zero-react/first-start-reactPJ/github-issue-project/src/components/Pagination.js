@@ -2,30 +2,28 @@ import styles from "./Pagination.module.css";
 import cx from "clsx";
 
 export default function Pagination({
-  currentPage,
   maxPage,
+  currentPage,
   onClickPageButton,
 }) {
   return (
     <div>
       <button
-        className={cx(styles.button, styles.blueButton)}
-        disabled={currentPage === 1}
+        className={cx(styles.quickButton, styles.button, {
+          [styles.disabled]: currentPage === 1,
+        })}
       >
         {"< Previous"}
       </button>
       {new Array(maxPage).fill(null).map((_, index) => (
         <PageButton
-          key={index}
+          key={index + 1}
           number={index + 1}
           onClick={onClickPageButton}
           selected={index + 1 === currentPage}
         />
       ))}
-      <button
-        className={cx(styles.button, styles.blueButton)}
-        disabled={currentPage === maxPage}
-      >
+      <button className={cx(styles.quickButton, styles.button)}>
         {"Next >"}
       </button>
     </div>

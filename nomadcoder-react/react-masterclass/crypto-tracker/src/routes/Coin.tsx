@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from 'react-query';
 import { Link, useMatch } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
 import { useLocation, useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { fetchCoinInfo, fetchCoinTickers } from '../api';
+import { Helmet } from 'react-helmet-async';
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -15,6 +17,14 @@ const Header = styled.header`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const HomeBtn = styled.div`
+  margin-top: 15px;
+  svg {
+    width: 25px;
+    height: 25px;
+  }
 `;
 
 const Title = styled.h1`
@@ -67,8 +77,8 @@ const Tab = styled.span<{ $isActive: boolean }>`
   padding: 7px 0px;
   border-radius: 10px;
   color: ${(props) =>
-      props.$isActive ? props.theme.accentColor : props.theme.textColor};
-    a {
+    props.$isActive ? props.theme.accentColor : props.theme.textColor};
+  a {
     display: block;
   }
 `;
@@ -99,7 +109,7 @@ interface InfoData {
   last_data_at: string;
 }
 
-interface PriceData {
+export interface PriceData {
   id: string;
   name: string;
   symbol: string;
@@ -133,36 +143,71 @@ interface PriceData {
 }
 
 export default function Coin() {
-  const [loading, setLoading] = useState(true);
-  const [info, setInfo] = useState<InfoData>();
-  const [priceInfo, setPriceInfo] = useState<PriceData>();
   const { coinId } = useParams();
   const location = useLocation();
   const state = location.state as RouteState;
   const priceMatch = useMatch('/:coinId/price');
   const chartMatch = useMatch('/:coinId/chart');
 
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
+  // 두가지의 쿼리를 사용할때 쓰는 방법 (구조분해할당할때 이름을 지정하고, 쿼리키를 배열로 이름과 전달할 값을 넣고)
+  // 인수를 받기위해 익명함수 사용
+  // 익명함수로 인수를 전달하여  api.ts에 coinId를 전달할 수 있게 한다!
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
+    ['info', coinId],
+    () => fetchCoinInfo(coinId!)
+  );
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+    ['tickers', coinId],
+    () => fetchCoinTickers(coinId!)
+  );
 
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
+  // const [loading, setLoading] = useState(true);
+  // const [info, setInfo] = useState<InfoData>();
+  // const [priceInfo, setPriceInfo] = useState<PriceData>();
+  // useEffect(() => {
+  //   (async () => {
+  //     const infoData = await (
+  //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+  //     ).json();
 
-      setInfo(infoData);
-      setPriceInfo(priceData);
-      setLoading(false);
-    })();
-  }, [coinId]);
+  //     const priceData = await (
+  //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+  //     ).json();
+
+  //     setInfo(infoData);
+  //     setPriceInfo(priceData);
+  //     setLoading(false);
+  //   })();
+  // }, [coinId]);
+
+  const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
+        </title>
+      </Helmet>
+      <HomeBtn>
+        <Link to='/'>
+          <svg
+            stroke='currentColor'
+            fill='currentColor'
+            strokeWidth='0'
+            viewBox='0 0 24 24'
+            className='sc-fUnMCh XtJQn'
+            height='1em'
+            width='1em'
+            xmlns='http://www.w3.org/2000/svg'
+          >
+            <path d='M12.97 2.59a1.5 1.5 0 0 0-1.94 0l-7.5 6.363A1.5 1.5 0 0 0 3 10.097V19.5A1.5 1.5 0 0 0 4.5 21h4.75a.75.75 0 0 0 .75-.75V14h4v6.25c0 .414.336.75.75.75h4.75a1.5 1.5 0 0 0 1.5-1.5v-9.403a1.5 1.5 0 0 0-.53-1.144l-7.5-6.363Z'></path>
+          </svg>
+        </Link>
+      </HomeBtn>
       <Header>
         <Title>
-          {state?.name ? state.name : loading ? 'Loading...' : info?.name}
+          {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
       </Header>
       {loading ? (
@@ -172,26 +217,26 @@ export default function Coin() {
           <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>${info?.symbol}</span>
+              <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{info?.open_source ? 'Yes' : 'No'}</span>
+              <span>Price:</span>
+              <span>${tickersData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <span>Total Supply:</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply:</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
 
@@ -204,7 +249,7 @@ export default function Coin() {
             </Tab>
           </Tabs>
 
-          <Outlet />
+          <Outlet context={{ coinId }} />
         </>
       )}
     </Container>

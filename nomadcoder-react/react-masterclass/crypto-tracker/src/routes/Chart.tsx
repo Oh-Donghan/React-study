@@ -18,7 +18,11 @@ export interface ChartProps {
   coinId: string;
 }
 
-export default function Chart() {
+interface DarkProps {
+  isDark: boolean;
+}
+
+export default function Chart({ isDark }: DarkProps) {
   const { coinId } = useOutletContext<ChartProps>();
   const { isLoading, data } = useQuery<IHistorical[]>(['ohlcv', coinId], () =>
     fetchCoinHistory(coinId)
@@ -39,7 +43,7 @@ export default function Chart() {
           ]}
           options={{
             theme: {
-              mode: 'dark',
+              mode: isDark ? 'dark' : 'light',
             },
             chart: {
               height: 300,
@@ -69,7 +73,9 @@ export default function Chart() {
               labels: {
                 show: false,
               },
-              categories: data?.map((price) => new Date(price.time_close * 1000).toDateString()),
+              categories: data?.map((price) =>
+                new Date(price.time_close * 1000).toDateString()
+              ),
               type: 'datetime',
             },
             fill: {
@@ -79,9 +85,9 @@ export default function Chart() {
             colors: ['#0fbcf9'],
             tooltip: {
               y: {
-                formatter: (value) => `$ ${value.toFixed(3)}`, 
-              }
-            }
+                formatter: (value) => `$ ${value.toFixed(3)}`,
+              },
+            },
           }}
         />
       )}

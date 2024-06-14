@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import {
   Link,
   Outlet,
@@ -7,6 +7,10 @@ import {
   useParams,
 } from 'react-router-dom';
 import styled from 'styled-components';
+import { fetchCoinInfo, fetchCoinTickers } from '../api';
+import { Helmet } from 'react-helmet-async';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 interface RouteState {
   name: string;
@@ -34,7 +38,7 @@ interface IInfoData {
   last_data_at: string;
 }
 
-interface IPriceData {
+export interface IPriceData {
   id: string;
   name: string;
   symbol: string;
@@ -71,36 +75,40 @@ export default function Coin() {
   const { coinId } = useParams();
   const location = useLocation();
   const state = location.state as RouteState;
-  const [loading, setLoading] = useState(true);
-  const [info, setInfo] = useState<IInfoData>();
-  const [priceInfo, setPriceInfo] = useState<IPriceData>();
   const chartMatch = useMatch('/:coinId/chart');
   const priceMatch = useMatch('/:coinId/price');
 
-  useEffect(() => {
-    (async () => {
-      const infoData = await (
-        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-      ).json();
+  const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>({
+    queryKey: ['info', coinId],
+    queryFn: () => fetchCoinInfo(coinId!),
+  });
 
-      const priceData = await (
-        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-      ).json();
+  const { isLoading: tickersLoading, data: tickersData } = useQuery<IPriceData>(
+    {
+      queryKey: ['tickers', coinId],
+      queryFn: () => fetchCoinTickers(coinId!),
+    }
+  );
 
-      setInfo(infoData);
-      setPriceInfo(priceData);
-      setLoading(false);
-    })();
-  }, [coinId]);
+  const loading = infoLoading || tickersLoading;
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? 'loading...' : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
-        <div>home</div>
+        <HomeBtn>
+          <Link to='/'>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </Link>
+        </HomeBtn>
         <Title>
-          {state?.name ? state.name : loading ? 'Loading...' : info?.name}
+          {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
-        <div>theme</div>
+        <ThemeBtn>theme</ThemeBtn>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
@@ -109,26 +117,26 @@ export default function Coin() {
           <Overview>
             <OverviewItem>
               <span>Rank:</span>
-              <span>{info?.rank}</span>
+              <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>{info?.symbol}</span>
+              <span>{infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{info?.open_source ? 'YES' : 'NO'}</span>
+              <span>Price:</span>
+              <span>{tickersData?.quotes?.USD?.price?.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
-          <Description>{info?.description}</Description>
+          <Description>{infoData?.description}</Description>
           <Overview>
             <OverviewItem>
               <span>Total Supply:</span>
-              <span>{priceInfo?.total_supply}</span>
+              <span>{tickersData?.total_supply}</span>
             </OverviewItem>
             <OverviewItem>
               <span>Max Supply:</span>
-              <span>{priceInfo?.max_supply}</span>
+              <span>{tickersData?.max_supply}</span>
             </OverviewItem>
           </Overview>
 
@@ -141,7 +149,7 @@ export default function Coin() {
             </Tab>
           </Tabs>
 
-          <Outlet />
+          <Outlet context={{ coinId }} />
         </>
       )}
     </Container>
@@ -149,6 +157,7 @@ export default function Coin() {
 }
 
 const Container = styled.div`
+  position: relative;
   padding: 0px 20px;
   max-width: 480px;
   margin: 0 auto;
@@ -157,8 +166,21 @@ const Container = styled.div`
 const Header = styled.header`
   height: 15vh;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+`;
+
+const HomeBtn = styled.div`
+  position: absolute;
+  left: 20px;
+  svg {
+    font-size: 24px;
+  }
+`;
+
+const ThemeBtn = styled.div`
+  position: absolute;
+  right: 20px;
 `;
 
 const Title = styled.h1`

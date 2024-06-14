@@ -2,12 +2,14 @@ import { RouterProvider } from 'react-router-dom';
 import router from './Router';
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 function App() {
   return (
     <>
       <GlobalStyle />
       <RouterProvider router={router} />
+      <ReactQueryDevtools initialIsOpen={true} />
     </>
   );
 }

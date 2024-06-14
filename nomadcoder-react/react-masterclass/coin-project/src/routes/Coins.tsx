@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { fetchCoins } from '../api';
+import { Helmet } from 'react-helmet-async';
 
 interface ICoin {
   id: string;
@@ -21,8 +22,12 @@ export default function Coins() {
 
   return (
     <Container>
+      <Helmet>
+        <title>코인</title>
+      </Helmet>
       <Header>
         <Title>코인</Title>
+        <ThemeBtn>theme</ThemeBtn>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
@@ -45,6 +50,7 @@ export default function Coins() {
 }
 
 const Container = styled.div`
+position: relative;
   padding: 0px 20px;
   max-width: 480px;
   margin: 0 auto;
@@ -56,6 +62,11 @@ const Header = styled.header`
   justify-content: center;
   align-items: center;
 `;
+
+const ThemeBtn = styled.div`
+  position: absolute;
+  right: 20px;
+`
 
 const CoinsList = styled.ul``;
 

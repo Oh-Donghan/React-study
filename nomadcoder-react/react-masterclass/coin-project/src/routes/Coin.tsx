@@ -11,6 +11,8 @@ import { fetchCoinInfo, fetchCoinTickers } from '../api';
 import { Helmet } from 'react-helmet-async';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { isDarkAtom } from '../atom';
 
 interface RouteState {
   name: string;
@@ -77,6 +79,9 @@ export default function Coin() {
   const state = location.state as RouteState;
   const chartMatch = useMatch('/:coinId/chart');
   const priceMatch = useMatch('/:coinId/price');
+  const themeAtom = useRecoilValue(isDarkAtom);
+  const setThemeAtom = useSetRecoilState(isDarkAtom);
+  const toggleTheme = () => setThemeAtom(prev => !prev);
 
   const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>({
     queryKey: ['info', coinId],
@@ -108,7 +113,7 @@ export default function Coin() {
         <Title>
           {state?.name ? state.name : loading ? 'Loading...' : infoData?.name}
         </Title>
-        <ThemeBtn>theme</ThemeBtn>
+        <ThemeBtn onClick={toggleTheme}>{themeAtom ? 'Light Mode' : 'Dark Mode'}</ThemeBtn>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>

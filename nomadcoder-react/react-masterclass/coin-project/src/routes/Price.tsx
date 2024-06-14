@@ -12,6 +12,18 @@ export default function Price() {
     queryFn: () => fetchCoinTickers(coinId),
   });
 
+  const percentChange = (change: number | undefined) => {
+    if (change === undefined) return null;
+    const sign = change > 0 ? '+' : '';
+    const className = change > 0 ? 'positive' : 'negative';
+    return (
+      <span className={className}>
+        {sign}
+        {change.toFixed(2)}%
+      </span>
+    );
+  };
+
   return (
     <>
       <div>
@@ -32,25 +44,33 @@ export default function Price() {
               <GridItem>
                 <span>1시간전과 시세차이</span>
                 <div>
-                  <span>{data?.quotes.USD.percent_change_1h}%</span>
+                  <span>
+                    {percentChange(data?.quotes.USD.percent_change_1h)}
+                  </span>
                 </div>
               </GridItem>
               <GridItem>
                 <span>7일전과 시세차이</span>
                 <div>
-                  <span>{data?.quotes.USD.percent_change_7d}%</span>
+                  <span>
+                    {percentChange(data?.quotes.USD.percent_change_7d)}
+                  </span>
                 </div>
               </GridItem>
               <GridItem>
                 <span>30일전과 시세차이</span>
                 <div>
-                  <span>{data?.quotes.USD.percent_change_30d}%</span>
+                  <span>
+                    {percentChange(data?.quotes.USD.percent_change_30d)}
+                  </span>
                 </div>
               </GridItem>
               <GridItem>
                 <span>1년전과 시세차이</span>
                 <div>
-                  <span>{data?.quotes.USD.percent_change_1y}%</span>
+                  <span>
+                    {percentChange(data?.quotes.USD.percent_change_1y)}
+                  </span>
                 </div>
               </GridItem>
             </GridArea>
@@ -96,6 +116,12 @@ const GridItem = styled.div`
   div {
     span {
       font-size: 25px;
+      &.positive {
+        color: #1849a9;
+      }
+      &.negative {
+        color: #ad2121;
+      }
     }
   }
 `;

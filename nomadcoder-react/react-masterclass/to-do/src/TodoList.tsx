@@ -1,113 +1,54 @@
 import { useForm } from 'react-hook-form';
 
-/* export default function TodoList() {
-  const [toDo, setToDo] = useState('');
-  const [toDoError, setToDoError] = useState('');
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const {
-      currentTarget: { value },
-    } = e;
-    setToDoError('');
-    setToDo(value);
-  };
-
-  const onSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(toDo);
-    if (toDo.length < 10) {
-      return setToDoError('To do should be longer');
-    }
-    console.log('submit');
-  };
-  return (
-    <div>
-      <form onSubmit={onSubmit}>
-        <input onChange={onChange} value={toDo} placeholder='Write a to do' />
-        <button>Add</button>
-        {toDoError !== '' ? toDoError : null}
-      </form>
-    </div>
-  );
-} */
-
-interface IForm {
-  email: string;
-  firstName: string;
-  lastName: string;
-  username: string;
-  password: string;
-  password1: string;
-}
-
-export default function ToDoListForm() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IForm>({
-    defaultValues: {
-      email: '@naver.com',
-    },
-  });
-  const onValid = (data: any) => {
-    console.log(data);
-  };
+// React Hook Form을 사용한 경우
+function ToDoList() {
+  const { register, watch } = useForm();
+  console.log(watch());
 
   return (
     <div>
-      <form
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          maxWidth: '300px',
-          margin: '50px auto',
-        }}
-        onSubmit={handleSubmit(onValid)}
-      >
-        <input
-          {...register('email', {
-            required: true,
-            pattern: {
-              value: /^[A-Za-z0-9._%+-]+@naver.com$/,
-              message: 'Only naver.com emails allowed',
-            },
-          })}
-          placeholder='Email'
-        />
-        <span>{errors?.email?.message}</span>
-        <input
-          {...register('firstName', { required: true })}
-          placeholder='First Name'
-        />
-        <span>{errors?.firstName?.message}</span>
-        <input
-          {...register('lastName', { required: true })}
-          placeholder='Last Name'
-        />
-        <span>{errors?.lastName?.message}</span>
-        <input
-          {...register('username', { required: true, minLength: 10 })}
-          placeholder='User Name'
-        />
-        <span>{errors?.username?.message}</span>
-        <input
-          {...register('password', { required: true, minLength: 5 })}
-          placeholder='Password'
-        />
-        <span>{errors?.password?.message}</span>
-        <input
-          {...register('password1', {
-            required: 'Password is required',
-            minLength: {
-              value: 5,
-              message: 'Your password is too short.',
-            },
-          })}
-          placeholder='Password1'
-        />
-        <span>{errors?.password1?.message}</span>
+      <form>
+        <input {...register('email')} placeholder='Email' />
+        <input {...register('firstName')} placeholder='First Name' />
+        <input {...register('lastName')} placeholder='Last Name' />
+        <input {...register('username')} placeholder='Username' />
+        <input {...register('password')} placeholder='Password' />
+        <input {...register('password1')} placeholder='Password1' />
         <button>Add</button>
       </form>
     </div>
   );
 }
+
+export default ToDoList;
+
+// React Hook Form 을 사용하지 않은경우 (로그인 형식을 만들려면 더많은 input과 state가 필요하다)
+// export default function TodoList() {
+//   const [toDo, setToDo] = useState('');
+//   const [toDoError, setToDoError] = useState('');
+//   const onChange = (event: React.FormEvent<HTMLInputElement>) => {
+//     const {
+//       currentTarget: { value },
+//     } = event;
+//     setToDoError('');
+//     setToDo(value);
+//   };
+
+//   const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+//     event.preventDefault();
+//     if (toDo.length < 10) {
+//       return setToDoError('To do should be longer');
+//       }
+//     console.log('submit');
+//   }
+
+//   return (
+//     <div>
+//       <form onSubmit={onSubmit}>
+//         <input onChange={onChange} value={toDo} placeholder='Write a to do' />
+//         <button>Add</button>
+//         {' '}{toDoError !== '' ? toDoError : null}
+//       </form>
+//     </div>
+//   );
+// }

@@ -1,6 +1,7 @@
-import { createGlobalStyle } from 'styled-components'
-import reset from 'styled-reset'
-import ToDoListForm from './TodoList'
+import { createGlobalStyle } from 'styled-components';
+import reset from 'styled-reset';
+import FormState from './FormState';
+import TodoList from './ToDoList';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -16,16 +17,16 @@ const GlobalStyle = createGlobalStyle`
     text-decoration: none;
     color: inherit;
   }
-`
+`;
 
 function App() {
-
   return (
     <>
       <GlobalStyle />
-      <ToDoListForm />
+      <TodoList />
+      <FormState />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

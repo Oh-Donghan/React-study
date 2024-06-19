@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
-import FormState from './FormState';
-import TodoList from './ToDoList';
+// import FormState from './FormState';
+import TodoList from './components/ToDoList';
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -24,7 +24,7 @@ function App() {
     <>
       <GlobalStyle />
       <TodoList />
-      <FormState />
+      {/* <FormState /> */}
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
 // import FormState from './FormState';
 import TodoList from './components/ToDoList';
@@ -21,12 +21,20 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   return (
-    <>
+    <Container>
       <GlobalStyle />
       <TodoList />
       {/* <FormState /> */}
-    </>
+    </Container>
   );
 }
 
 export default App;
+
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 70px;
+  width: 100%;
+  height: 100%;
+`

@@ -2,7 +2,10 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
 const svg = {
-  start: { pathLength: 0, fill: 'rgba(255, 255, 255, 0)' },
+  start: {
+    pathLength: 0,
+    fill: 'rgba(255, 255, 255, 0)',
+  },
   end: {
     pathLength: 1,
     fill: 'rgba(255, 255, 255, 1)',

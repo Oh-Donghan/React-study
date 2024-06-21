@@ -22,7 +22,7 @@ const boxVariants = {
 
 // AnimatePresence를 사용할땐 항상 children으로 조건문이 있어야한다
 // Box가 사라지는걸 animate하려면 AnimatePresence를 써야함
-export default function Animatepresence() {
+export default function AnimatePOne() {
   const [showing, setShowing] = useState(false);
   const toggleShowing = () => setShowing((prev) => !prev);
 

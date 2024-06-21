@@ -1,7 +1,10 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import reset from 'styled-reset';
-import Animatepresence from "./components/Animatepresence";
+import FinalProject from "./components/FinalProject";
 
+// import LayoutAnimation from "./components/LayoutAnimation";
+// import AnimatePTwo from "./components/AnimatePTwo";
+// import AnimatePOne from "./components/AnimatePOne";
 // import GestureAndDrag from "./components/GestureAndDrag";
 // import MotionValues from "./components/MotionValues";
 // import SvgAnimation from "./components/SvgAnimation";
@@ -11,7 +14,10 @@ function App() {
     <>
       <GlobalStyle />
       <Wrapper>
-        <Animatepresence />
+        <FinalProject />
+        {/* <LayoutAnimation /> */}
+        {/* <AnimatePOne /> */}
+        {/* <AnimatePTwo /> */}
         {/* <GestureAndDrag /> */}
         {/* <MotionValues /> */}
         {/* <SvgAnimation /> */}

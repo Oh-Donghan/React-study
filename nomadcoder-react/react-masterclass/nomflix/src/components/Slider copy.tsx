@@ -4,7 +4,7 @@ import { makeImagePath } from '../utilities';
 import { useState } from 'react';
 import useWindowDimensions from './WindowDimensions';
 import { IMovie } from '../api';
-import { useNavigate } from 'react-router-dom';
+import { useMatch, useNavigate } from 'react-router-dom';
 
 const boxVariants = {
   normal: {
@@ -44,6 +44,7 @@ export default function Slider({
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const navigate = useNavigate();
+  const bigMovieMatch = useMatch('/movies/:movieId');
 
   // 실시간 window width
   const windowD = useWindowDimensions();
@@ -68,6 +69,12 @@ export default function Slider({
   const onBoxClicked = (movieId: number) => {
     navigate(`/movies/${movieId}`);
   };
+
+  const onOverlayClick = () => navigate('/');
+
+  const clickMovie =
+    bigMovieMatch?.params.movieId &&
+    category?.find((movie) => movie.id === +bigMovieMatch.params.movieId!);
 
   return (
     <Wrapper>
@@ -104,6 +111,35 @@ export default function Slider({
           </Row>
         </AnimatePresence>
       </MovieSlider>
+      <AnimatePresence>
+        {bigMovieMatch ? (
+          <>
+            <Overlay
+              onClick={onOverlayClick}
+              exit={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            />
+            <MovieModal layoutId={bigMovieMatch.params.movieId}>
+              {clickMovie ? (
+                <>
+                  <BigCover
+                    style={{
+                      backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                        clickMovie.backdrop_path,
+                        'w500'
+                      )})`,
+                    }}
+                  />
+                  <BigTitle>{clickMovie.title}</BigTitle>
+                </>
+              ) : (
+                <Error>NO DATA</Error>
+              )}
+            </MovieModal>
+          </>
+        ) : null}
+      </AnimatePresence>
     </Wrapper>
   );
 }
@@ -158,4 +194,47 @@ const Title = styled.h2`
   padding: 5px 20px;
   font-weight: bold;
   font-size: 28px;
+`;
+
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+`;
+
+const MovieModal = styled(motion.div)`
+  position: fixed;
+  width: 60vw;
+  height: 70vh;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: ${(props) => props.theme.black.lighter};
+`;
+
+const BigCover = styled.div`
+  width: 100%;
+  height: 400px;
+  background-size: cover;
+  background-position: center center;
+`;
+
+const BigTitle = styled.h2`
+  color: ${(props) => props.theme.white.lighter};
+  text-align: center;
+  font-size: 32px;
+  position: relative;
+  top: -60px;
+`;
+
+const Error = styled.div`
+  text-align: center;
+  line-height: 400px;
 `;

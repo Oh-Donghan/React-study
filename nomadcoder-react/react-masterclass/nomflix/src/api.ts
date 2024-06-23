@@ -22,6 +22,13 @@ export interface IGetMoviesResult {
   total_results: number;
 }
 
+export const getTv = async (category:string) => {
+  const response = await axios.get(
+    `${BASE_PATH}/tv/${category}?api_key=${API_KEY}`
+  );
+  return response.data;
+};
+
 // axios 사용
 export const getMovies = async (category: string) => {
   const response = await axios.get(

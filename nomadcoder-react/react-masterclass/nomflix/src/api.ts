@@ -3,7 +3,7 @@ import axios from 'axios';
 const API_KEY = import.meta.env.VITE_API_KEY;
 const BASE_PATH = 'https://api.themoviedb.org/3';
 
-interface IMovie {
+export interface IMovie {
   id: number;
   backdrop_path: string;
   poster_path: string;
@@ -23,9 +23,9 @@ export interface IGetMoviesResult {
 }
 
 // axios 사용
-export const getMovies = async () => {
+export const getMovies = async (category: string) => {
   const response = await axios.get(
-    `${BASE_PATH}/movie/now_playing?api_key=${API_KEY}`
+    `${BASE_PATH}/movie/${category}?api_key=${API_KEY}`
   );
   return response.data;
 };

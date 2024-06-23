@@ -1,13 +1,16 @@
-import { useQuery } from '@tanstack/react-query';
-import { IGetMoviesResult, getMovies } from '../api';
 import styled from 'styled-components';
 import { makeImagePath } from '../utilities';
+import useMultipleQuery from '../components/useMultipleQuery';
+import Slider from '../components/Slider';
 
 function Home() {
-  const { data, isLoading } = useQuery<IGetMoviesResult>({
-    queryKey: ['movies', 'nowPlaying'],
-    queryFn: getMovies,
-  });
+  const [
+    { isLoading: loadingNowPlaying, data: nowPlayingData },
+    { isLoading: loadingTopRated, data: topRatedData },
+    { isLoading: loadingUpcoming, data: upcomingData },
+  ] = useMultipleQuery();
+
+  const isLoading = loadingNowPlaying || loadingTopRated || loadingUpcoming;
 
   return (
     <Wrapper>
@@ -16,11 +19,21 @@ function Home() {
       ) : (
         <>
           <Banner
-            $bgPhoto={makeImagePath(data?.results[0].backdrop_path || '')}
+            $bgPhoto={makeImagePath(
+              nowPlayingData?.results[0].backdrop_path || ''
+            )}
           >
-            <Title>{data?.results[0].title}</Title>
-            <Overview>{data?.results[0].overview}</Overview>
+            <Title>{nowPlayingData?.results[0].title}</Title>
+            <Overview>{nowPlayingData?.results[0].overview}</Overview>
           </Banner>
+          <SliderWrapper>
+            <Slider
+              title='Now Playing'
+              category={nowPlayingData?.results.slice(1) || []}
+            />
+            <Slider title='Top Rated' category={topRatedData?.results || []} />
+            <Slider title='Upcoming' category={upcomingData?.results || []} />
+          </SliderWrapper>
         </>
       )}
     </Wrapper>
@@ -31,6 +44,7 @@ export default Home;
 
 const Wrapper = styled.div`
   background: black;
+  padding-bottom: 200px;
 `;
 
 const Loader = styled.div`
@@ -60,3 +74,8 @@ const Overview = styled.p`
   font-size: 28px;
   width: 50%;
 `;
+
+const SliderWrapper = styled.div`
+  position: relative;
+  top: -100px;
+`

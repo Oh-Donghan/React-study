@@ -12,6 +12,11 @@ const GlobalStyle = createGlobalStyle`
   * {
     box-sizing: border-box;
   }
+  html {
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
   body {
     font-weight: 300;
     font-family: "Source Sans 3", sans-serif;

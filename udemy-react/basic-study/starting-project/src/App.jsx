@@ -1,13 +1,13 @@
-import Header from './components/Header/Header';
-import CoreConcepts from './components/CoreConcepts';
-import Examples from './components/Examples';
+import Header from './components/Header/Header.jsx';
+import CoreConcents from './components/CoreConcents.jsx';
+import Examples from './components/Examples.jsx';
 
 function App() {
   return (
     <>
       <Header />
       <main>
-        <CoreConcepts />
+        <CoreConcents />
         <Examples />
       </main>
     </>

@@ -1,20 +1,18 @@
 import { useState } from 'react';
+import NewProject from './components/NewProject';
 import NoProjectSelected from './components/NoProjectSelected';
 import ProjectSidebar from './components/ProjectSidebar';
-import NewProject from './components/NewProject';
 import SelectedProject from './components/SelectedProject';
 
 function App() {
-  const [projectState, setProjectState] = useState({
-    // undefined 는 아무것도 추가하지 않는 상태
-    // null 은 새로운 프로젝트를 추가하는 상태
+  const [projectsState, setProjectsState] = useState({
     selectedProjectId: undefined,
     projects: [],
     tasks: [],
   });
 
   function handleAddTask(text) {
-    setProjectState((prevState) => {
+    setProjectsState((prevState) => {
       const taskId = Math.random();
       const newTask = {
         text: text,
@@ -30,7 +28,7 @@ function App() {
   }
 
   function handleDeleteTask(id) {
-    setProjectState((prevState) => {
+    setProjectsState((prevState) => {
       return {
         ...prevState,
         tasks: prevState.tasks.filter((task) => task.id !== id),
@@ -39,7 +37,7 @@ function App() {
   }
 
   function handleSelectProject(id) {
-    setProjectState((prevState) => {
+    setProjectsState((prevState) => {
       return {
         ...prevState,
         selectedProjectId: id,
@@ -48,7 +46,7 @@ function App() {
   }
 
   function handleStartAddProject() {
-    setProjectState((prevState) => {
+    setProjectsState((prevState) => {
       return {
         ...prevState,
         selectedProjectId: null,
@@ -57,7 +55,7 @@ function App() {
   }
 
   function handleCancelAddProject() {
-    setProjectState((prevState) => {
+    setProjectsState((prevState) => {
       return {
         ...prevState,
         selectedProjectId: undefined,
@@ -66,7 +64,7 @@ function App() {
   }
 
   function handleAddProject(projectData) {
-    setProjectState((prevState) => {
+    setProjectsState((prevState) => {
       const projectId = Math.random();
       const newProject = {
         ...projectData,
@@ -81,10 +79,8 @@ function App() {
     });
   }
 
-  // console.log(projectState.projects);
-
   function handleDeleteProject() {
-    setProjectState((prevState) => {
+    setProjectsState((prevState) => {
       return {
         ...prevState,
         selectedProjectId: undefined,
@@ -95,8 +91,8 @@ function App() {
     });
   }
 
-  const selectedProject = projectState.projects.find(
-    (project) => project.id === projectState.selectedProjectId
+  const selectedProject = projectsState.projects.find(
+    (project) => project.id === projectsState.selectedProjectId
   );
 
   let content = (
@@ -105,15 +101,15 @@ function App() {
       onDelete={handleDeleteProject}
       onAddTask={handleAddTask}
       onDeleteTask={handleDeleteTask}
-      tasks={projectState.tasks}
+      tasks={projectsState.tasks}
     />
   );
 
-  if (projectState.selectedProjectId === null) {
+  if (projectsState.selectedProjectId === null) {
     content = (
       <NewProject onAdd={handleAddProject} onCancel={handleCancelAddProject} />
     );
-  } else if (projectState.selectedProjectId === undefined) {
+  } else if (projectsState.selectedProjectId === undefined) {
     content = <NoProjectSelected onStartAddProject={handleStartAddProject} />;
   }
 
@@ -121,9 +117,9 @@ function App() {
     <main className='h-screen my-8 flex gap-8'>
       <ProjectSidebar
         onStartAddProject={handleStartAddProject}
-        projects={projectState.projects}
+        projects={projectsState.projects}
         onSelectProject={handleSelectProject}
-        selectedProjectId={projectState.selectedProjectId}
+        selectedProjectId={projectsState.selectedProjectId}
       />
       {content}
     </main>

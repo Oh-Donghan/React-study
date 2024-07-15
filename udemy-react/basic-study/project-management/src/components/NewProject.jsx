@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import Input from './Input';
-import Modal from './Modal';
+import Input from './Input.jsx';
+import Modal from './Modal.jsx';
 
 export default function NewProject({ onAdd, onCancel }) {
   const modal = useRef();
@@ -12,12 +12,12 @@ export default function NewProject({ onAdd, onCancel }) {
   function handleSave() {
     const enteredTitle = title.current.value;
     const enteredDescription = description.current.value;
-    const enteredDeuDate = dueDate.current.value;
+    const enteredDueDate = dueDate.current.value;
 
     if (
       enteredTitle.trim() === '' ||
       enteredDescription.trim() === '' ||
-      enteredDeuDate.trim() === ''
+      enteredDueDate.trim() === ''
     ) {
       modal.current.open();
       return;
@@ -26,7 +26,7 @@ export default function NewProject({ onAdd, onCancel }) {
     onAdd({
       title: enteredTitle,
       description: enteredDescription,
-      dueDate: enteredDeuDate,
+      dueDate: enteredDueDate,
     });
   }
 
@@ -41,7 +41,7 @@ export default function NewProject({ onAdd, onCancel }) {
           Please make sure you provide a valid value for every input field.
         </p>
       </Modal>
-      <div className=' w-[35rem] mt-16'>
+      <div className='w-[35rem] mt-16'>
         <menu className='flex items-center justify-end gap-4 my-4'>
           <li>
             <button
@@ -62,8 +62,8 @@ export default function NewProject({ onAdd, onCancel }) {
         </menu>
         <div>
           <Input type='text' ref={title} label='Title' />
-          <Input ref={description} label='Description' textarea />
-          <Input type='date' ref={dueDate} label='Deu Date' />
+          <Input ref={description} label='Description' textarea={true} />
+          <Input type='date' ref={dueDate} label='Due Date' />
         </div>
       </div>
     </>

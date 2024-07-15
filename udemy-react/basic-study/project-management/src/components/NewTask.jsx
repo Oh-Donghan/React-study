@@ -1,22 +1,19 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 
 export default function NewTask({ onAdd }) {
   const [enteredTask, setEnteredTask] = useState('');
-
-  const inputRef = useRef();
 
   function handleChange(event) {
     setEnteredTask(event.target.value);
   }
 
   function handleClick() {
-  if (enteredTask.trim() === '') {
-    inputRef.current.placeholder = 'Please enter a task'; // 값을 변경해야 함
-    return;
+    if (enteredTask.trim() === '') {
+      return;
+    }
+    onAdd(enteredTask);
+    setEnteredTask('');
   }
-  onAdd(enteredTask);
-  setEnteredTask('');
-}
 
   return (
     <div className='flex items-center gap-4'>
@@ -25,7 +22,6 @@ export default function NewTask({ onAdd }) {
         className='w-64 px-2 py-1 rounded-sm bg-stone-200'
         onChange={handleChange}
         value={enteredTask}
-        ref={inputRef}
       />
       <button
         className='text-stone-700 hover:text-stone-950'

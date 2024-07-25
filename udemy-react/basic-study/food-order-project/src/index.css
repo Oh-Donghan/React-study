@@ -260,3 +260,19 @@ h1 {
     transform: translateY(0);
   }
 }
+
+.center {
+  text-align: center;
+}
+
+.error {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #ce7777;
+  color: rgb(120, 37, 37);
+  width: 400px;
+  border-radius: 5px;
+}
